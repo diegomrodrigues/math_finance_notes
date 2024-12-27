@@ -259,6 +259,51 @@ def save_topic_file(section_dir, topic, index, content):
         f.write(content.text)
     return topic_filename
 
+def create_math_format_model():
+    """Create a model specifically for formatting mathematical notation."""
+    math_config = {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "top_k": 40,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
+    }
+    
+    return genai.GenerativeModel(
+        model_name="gemini-2.0-flash-exp",
+        generation_config=math_config,
+        system_instruction="""Format all mathematical expressions using LaTeX notation within $ or $$ delimiters. 
+        
+Examples of replacements:
+- F(X) = σ({Xk : k = 0, 1, ..., T}) → $F(X) = \sigma(\{X_k : k = 0, 1, \ldots, T\})$
+- {X(t1) ∈ B1, X(t2) ∈ B2, ..., X(tk) ∈ Bk} → $\{X(t_1) \in B_1, X(t_2) \in B_2, \ldots, X(t_k) \in B_k\}$
+- P(X ≤ x) → $P(X \leq x)$
+- E[X] = ∫ x dF(x) → $E[X] = \int x \, dF(x)$
+- σ² = E[(X - μ)²] → $\sigma^2 = E[(X - \mu)^2]$
+- ∑(xi - x̄)² → $\sum(x_i - \bar{x})^2$
+
+Guidelines:
+1. Preserve all original text content
+2. Only modify mathematical expressions
+3. Use $ for inline math and $$ for display math
+4. Format special characters: ∈ → \in, ∑ → \sum, ∫ → \int, etc.
+5. Add proper subscripts: x1 → x_1, xn → x_n
+6. Format Greek letters: σ → \sigma, μ → \mu
+7. Use \ldots for ellipsis in math mode
+8. Add proper spacing with \, where needed
+9. Don't modify existing correctly formatted LaTeX expressions""")
+
+def format_math_notation(math_model, content):
+    """Process content to format mathematical notation using LaTeX."""
+    math_chat = math_model.start_chat()
+    return math_chat.send_message(
+        f"""Please format all mathematical expressions in this text using LaTeX notation:
+
+{content.text}
+
+Remember to preserve all original content and only modify mathematical expressions not formatted yet."""
+    )
+
 def process_topic_section(chat_session, topics, section_name, input_dir):
     """Process topics for a specific section and save individual topic files."""
     total_topics = len(topics)
@@ -266,6 +311,7 @@ def process_topic_section(chat_session, topics, section_name, input_dir):
     
     # Create models and directory
     diagram_model = create_diagram_model()
+    math_model = create_math_format_model()
     section_dir = create_section_directory(input_dir, section_name)
     
     for i, topic in enumerate(topics, 1):
@@ -274,12 +320,14 @@ def process_topic_section(chat_session, topics, section_name, input_dir):
         
         # Generate and enhance content
         initial_response = generate_topic_content(chat_session, topic)
-        print("Adding diagrams...")
-        final_response = add_diagrams_to_content(diagram_model, initial_response)
+        print("  Adding diagrams...")
+        with_diagrams = add_diagrams_to_content(diagram_model, initial_response)
+        print("  Formatting mathematical notation...")
+        final_response = format_math_notation(math_model, with_diagrams)
         
         # Save result
         filename = save_topic_file(section_dir, topic, i, final_response)
-        print(f"✓ Saved topic with diagrams to: {filename}")
+        print(f"✓ Saved topic with diagrams and formatted math to: {filename}")
 
 def get_input_directories(base_dir):
     """Get all valid input directories from the base directory."""
