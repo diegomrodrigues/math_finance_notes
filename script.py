@@ -9,7 +9,7 @@ PROMPT_FILE = os.path.join(BASE_DIR, "00. prompts", "Resumo.md")
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
 TARGET_FOLDERS = [
-    "01. Financial Markets"
+    "01. Finacial Markets"
 ]
 
 # Model configuration
@@ -210,7 +210,8 @@ def add_diagrams_to_content(diagram_model, content):
 Remember to:
 1. Keep the original text unchanged
 2. Add Mermaid diagram code blocks where they would help explain concepts
-3. Place diagrams in logical positions within the text"""
+3. Place diagrams in logical positions within the text
+"""
     )
 
 def create_filename_model():

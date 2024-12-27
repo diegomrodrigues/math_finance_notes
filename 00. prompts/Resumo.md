@@ -123,6 +123,8 @@ O tópico para o seu capítulo é:
 
 -   **Não conclua o capítulo até que o usuário solicite.**
 
+Lembre-se de usar $ em vez de \( e \), e $$ em vez de \[ e \] ou texto sem formatação para expressões matemáticas!
+
 **Estruture seu capítulo da seguinte forma:**
 
 ## Título Conciso
@@ -214,6 +216,8 @@ Inclua lemmas e corolários relevantes:
 
 **Corolário 3:** Derive um corolário do Teorema de precificação, **conforme indicado no contexto [^21]**.
 
+Lembre-se de usar $ em vez de \( e \), e $$ em vez de \[ e \] ou texto sem formatação para expressões matemáticas!
+
 ### [Dedução Teórica Complexa]
 
 <imagem: descrição detalhada ou utilize a linguagem Mermaid para diagramas ricos, como um mapa mental mostrando a derivação da fórmula de Black-Scholes>
@@ -241,6 +245,8 @@ Inclua lemmas e corolários que aprofundem a análise:
 **Prova do Lemma 4:** Desenvolva a prova detalhada, **utilizando conceitos do contexto [^28]**. $\blacksquare$
 
 **Corolário 4:** Apresente um corolário que resulte do Lemma 4, destacando suas implicações práticas para a precificação de opções, **conforme indicado no contexto [^29]**.
+
+Lembre-se de usar $ em vez de \( e \), e $$ em vez de \[ e \] ou texto sem formatação para expressões matemáticas!
 
 ### [Prova ou Demonstração Matemática Avançada]
 
@@ -274,7 +280,9 @@ Continue o desenvolvimento da prova, mantendo um fluxo lógico e rigoroso. **Ela
 
 Conclua a prova mostrando como os passos anteriores levam ao resultado desejado. **Analise as implicações do teorema provado, discutindo sua relevância e aplicações potenciais em finanças quantitativas [^41]**. Se aplicável, apresente extensões ou generalizações do teorema, **referenciando discussões teóricas do contexto [^42]**.
 
-Mantenha um tom acadêmico e rigoroso, adequado para um público com conhecimento avançado em finanças quantitativas e matemática. Use $ para expressões matemáticas em linha e $$ para equações centralizadas.
+Mantenha um tom acadêmico e rigoroso, adequado para um público com conhecimento avançado em finanças quantitativas e matemática.
+
+Lembre-se de usar $ em vez de \( e \), e $$ em vez de \[ e \] ou texto sem formatação para expressões matemáticas!
 
 ### Pergunta Teórica Avançada (Exemplo): Qual a Relação Entre a Escolha da Medida de Martingale Equivalente e o Modelo de Precificação de Derivativos?
 
@@ -297,6 +305,8 @@ As perguntas devem ser altamente relevantes, **avaliar a compreensão profunda d
 -   **Definições Formais:** Apresente definições precisas e formais dos conceitos envolvidos, utilizando a linguagem e notação de cálculo estocástico.
 -   **Teoremas, Lemmas e Corolários:** Inclua teoremas, lemmas, corolários e equações relevantes, acompanhados de provas detalhadas e rigorosas, fundamentadas no contexto fornecido.
 -   **Integração de Conceitos:** Combine múltiplos conceitos teóricos para aprofundar a análise, exigindo raciocínio avançado e crítico, como o uso conjunto de cálculo de Itô e Girsanov.
+
+Lembre-se de usar $ em vez de \( e \), e $$ em vez de \[ e \] ou texto sem formatação para expressões matemáticas!
 
 ### Conclusão
 
