@@ -367,6 +367,85 @@ def cleanup_prompt_artifacts(cleanup_model, content):
 Remember to keep all mathematical formulas, technical content, and structural elements intact."""
     )
 
+def create_numerical_examples_model():
+    """Create a model specifically for adding numerical examples."""
+    examples_config = {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "top_k": 40,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
+    }
+    
+    return genai.GenerativeModel(
+        model_name="gemini-2.0-flash-exp",
+        generation_config=examples_config,
+        system_instruction="""Add practical numerical examples to theoretical sections while preserving all existing content. 
+
+Guidelines for adding examples:
+1. Identify sections that would benefit from practical examples
+2. Add examples after theoretical explanations using this format:
+
+> 💡 **Exemplo Numérico:**
+[Example content with actual numbers and calculations]
+
+Example types to add:
+- Numerical calculations of theoretical formulas
+- Step-by-step applications of mathematical concepts
+- Python code snippets using numpy/scipy for complex calculations
+- Market-based scenarios with real-world parameters
+- Comparative analyses with different parameter values
+
+Requirements:
+1. Preserve all existing content (text, math, diagrams, references)
+2. Add examples only where they enhance understanding
+3. Use realistic market parameters when applicable
+4. Include Python code only when it adds value
+5. Format all mathematical expressions using $ and $$
+6. Keep references to context [^n] intact
+7. Maintain academic tone while making concepts more tangible
+8. Add examples after theoretical sections, not in the middle
+9. Use emoji 💡 to clearly mark example sections
+10. Ensure examples are consistent with the theoretical framework
+11. Use tables and other markdown elements to ehance the explanation
+
+Example format:
+
+> 💡 **Exemplo Numérico: Cálculo de Volatilidade Implícita**
+Considere uma opção de compra com os seguintes parâmetros:
+- Preço do ativo (S): $100
+- Preço de exercício (K): $95
+- Taxa livre de risco (r): 5% a.a.
+- Tempo até vencimento (T): 0.5 anos
+- Preço de mercado (C): $8.50
+
+Usando a fórmula de Black-Scholes:
+```python
+import numpy as np
+from scipy.stats import norm
+
+def black_scholes(S, K, T, r, sigma):
+    d1 = (np.log(S/K) + (r + sigma**2/2)*T) / (sigma*np.sqrt(T))
+    d2 = d1 - sigma*np.sqrt(T)
+    return S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)
+```
+
+A volatilidade implícita que resulta em C = $8.50 é σ = 25.3%.""")
+
+def add_numerical_examples(examples_model, content):
+    """Process content to add numerical examples where appropriate."""
+    examples_chat = examples_model.start_chat()
+    return examples_chat.send_message(
+        f"""Please add practical numerical examples to this text where appropriate:
+
+{content.text}
+
+Remember to:
+1. Preserve all existing content
+2. Add examples only where they enhance understanding
+3. Use the specified format with 💡
+4. Keep all mathematical notation and references intact""")
+
 def process_topic_section(chat_session, topics, section_name, input_dir):
     """Process topics for a specific section and save individual topic files."""
     total_topics = len(topics)
@@ -374,6 +453,7 @@ def process_topic_section(chat_session, topics, section_name, input_dir):
     
     # Create models and directory
     cleanup_model = create_cleanup_model()
+    examples_model = create_numerical_examples_model()
     diagram_model = create_diagram_model()
     math_model = create_math_format_model()
     section_dir = create_section_directory(input_dir, section_name)
@@ -384,16 +464,18 @@ def process_topic_section(chat_session, topics, section_name, input_dir):
         
         # Generate and enhance content
         initial_response = generate_topic_content(chat_session, topic)
-        print("  Cleaning up prompt artifacts...")
+        print("✓ Cleaning up prompt artifacts...")
         cleaned_response = cleanup_prompt_artifacts(cleanup_model, initial_response)
-        print("  Adding diagrams...")
-        with_diagrams = add_diagrams_to_content(diagram_model, cleaned_response)
-        print("  Formatting mathematical notation...")
+        print("✓ Adding numerical examples...")
+        with_examples = add_numerical_examples(examples_model, cleaned_response)
+        print("✓ Adding diagrams...")
+        with_diagrams = add_diagrams_to_content(diagram_model, with_examples)
+        print("✓ Formatting mathematical notation...")
         final_response = format_math_notation(math_model, with_diagrams)
         
         # Save result
         filename = save_topic_file(section_dir, topic, i, final_response)
-        print(f"✓ Saved topic with cleanup, diagrams, and formatted math to: {filename}")
+        print(f"✓ Saved topic with cleanup, examples, diagrams, and formatted math to: {filename}")
 
 def get_input_directories(base_dir):
     """Get all valid input directories from the base directory."""
